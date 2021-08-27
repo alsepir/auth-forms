@@ -1,0 +1,18 @@
+@import '../theme.scss';
+
+.btn {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  
+  &_primary {
+    background-color: $blue;
+    color: white;
+  }
+
+  &_secondary {
+    background-color: $grey;
+    color: $blue;
+  }
+}

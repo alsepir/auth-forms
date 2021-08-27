@@ -1,0 +1,54 @@
+@import '../theme.scss';
+
+.input {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  height: 50px;
+  border: 2px solid $grey;
+  border-radius: 8px;
+  background-color: white;
+  
+  &:hover:not(.input_error) { border-color: $blue; }
+  &_focus { border: 2px solid $blue; }
+  &_error { border-color: $red; }
+
+  &_custom {
+    flex: 1;
+    height: 100%;
+    padding: 0 12px 0 12px;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 8px;
+  }
+
+  &__placeholder {
+    position: absolute;
+    top: 12px;
+    margin-left: 12px;
+    padding: 0;
+    color: $typography-secondary;
+    background-color: white;
+    transform: scale(1) translateX(0);
+    transition: transform 200ms, top 300ms;
+
+    &_focus { color: $blue; }
+    &_focus, &_filled {
+      top: -12px;
+      margin: 0px;
+      padding: 0 4px 0 4px;
+      transform: scale(0.8) translateX(-4px);
+      transition: transform 300ms, top 300ms;
+    }
+    &_error { color: $red;}
+  }
+
+  &__error {
+    font-size: 0.8rem;
+    color: $red;
+    padding: 4px 12px 0 12px;
+  }
+}
