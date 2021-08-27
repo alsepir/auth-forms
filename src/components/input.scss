@@ -7,40 +7,54 @@
   align-items: center;
   position: relative;
   height: 50px;
-  border: 2px solid $grey;
   border-radius: 8px;
   background-color: white;
   
-  &:hover:not(.input_error) { border-color: $blue; }
-  &_focus { border: 2px solid $blue; }
-  &_error { border-color: $red; }
+  &_custom.input_error {
+    border-color: $red; 
+    
+    &:focus-visible {
+      outline: none;
+      border: 2px solid $red; 
+    }
+  }
 
   &_custom {
     flex: 1;
     height: 100%;
     padding: 0 12px 0 12px;
-    outline: none;
-    border: none;
+    border: 2px solid $grey;
     background-color: white;
     border-radius: 8px;
+
+    &:hover:not(.input_error) {
+      border-color: $blue;
+    }
+
+    &:focus-visible {
+      outline: none;
+      border: 2px solid $blue; 
+    }
   }
 
   &__placeholder {
     position: absolute;
     top: 12px;
+    left: 0;
     margin-left: 12px;
     padding: 0;
     color: $typography-secondary;
     background-color: white;
-    transform: scale(1) translateX(0);
     transition: transform 200ms, top 300ms;
 
     &_focus { color: $blue; }
     &_focus, &_filled {
       top: -12px;
+      left: 0;
       margin: 0px;
       padding: 0 4px 0 4px;
-      transform: scale(0.8) translateX(-4px);
+      font-size: 0.8rem;
+      transform: translateX(10px);
       transition: transform 300ms, top 300ms;
     }
     &_error { color: $red;}
@@ -50,5 +64,17 @@
     font-size: 0.8rem;
     color: $red;
     padding: 4px 12px 0 12px;
+  }
+
+  &__postfix {
+    position: absolute;
+    right: 10px;
+    font-size: 0.8rem;
+    color: rgba(black, 0.8);
+    background-color: white;
+
+    &:hover {
+      color: $blue;
+    }
   }
 }

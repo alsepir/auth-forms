@@ -5,6 +5,11 @@
   padding: 10px;
   border-radius: 8px;
   text-align: center;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 5px 1px $blue;
+  }
   
   &_primary {
     background-color: $blue;

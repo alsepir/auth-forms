@@ -10,6 +10,7 @@ interface Props {
 const Button = ({ title, onClick, type = 'primary' }: Props) => {
   return (
     <div
+      tabIndex={0}
       className={`btn btn_${type}`}
       onClick={onClick}
     >

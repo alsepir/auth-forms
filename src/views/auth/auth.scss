@@ -3,15 +3,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url(https://source.unsplash.com/user/erondu/1600x900);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &__submit { display: none; }
   
   &__content {
     box-sizing: border-box;
     overflow: hidden;
     width: 320px;
     padding: 16px;
-    border: 1px solid rgba(black, 0.04);
+    border: 1px solid rgba(black, 0.1);
     border-radius: 16px;
-    box-shadow: 0 16px 32px 0 rgba(black, 0.08);
+    box-shadow: 0 16px 32px 0 rgba(black, 0.2);
     background-color: white;
   }
 
@@ -22,8 +27,8 @@
     margin-bottom: 20px;
   }
 
-  &__input_default { margin-bottom: 20px; }
-  &__input_error { margin-bottom: 12px; }
+  &__input_default { margin-bottom: 24px; }
+  &__input_error { margin-bottom: 16px; }
 
   .fade-enter  {
     opacity: 0.2;

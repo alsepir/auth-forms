@@ -8,22 +8,24 @@ interface Props {
   onChange?: (value: string) => void
   error?: string
   calssName?: string
+  type?: 'password' | 'text'
 }
 
-const Input = ({ value, onChange, placeholder, orderId = 1, error, calssName }: Props) => {
+const Input = ({ value, onChange, placeholder, orderId = 1, error, calssName, type = 'text' }: Props) => {
   const [focus, setFocus] = useState(false)
+  const [showPass, setShowPass] = useState(false)
   const id = `input ${orderId}`
 
-  const onClick = () => setFocus(true)
+  const onFocus = () => setFocus(true)
   const onBlur = () => setFocus(false)
 
   const filledCSS = !!value ? 'input__placeholder_filled' : ''
-  const focusCSS =  focus ? 'input__placeholder_focus' : ''
-  const ErrorCSS =  !!error ? 'input__placeholder_error' : ''
+  const focusCSS = focus ? 'input__placeholder_focus' : ''
+  const ErrorCSS = !!error ? 'input__placeholder_error' : ''
 
   return (
     <div className={calssName}>
-      <div onBlur={onBlur} className={`input ${focus ? 'input_focus' : ''} ${!!error ? 'input_error' : ''}`}>
+      <div onBlur={onBlur} className={`input ${focus ? 'input_focus' : ''}`}>
         {!!placeholder && (
           <label
             htmlFor={id}
@@ -34,11 +36,21 @@ const Input = ({ value, onChange, placeholder, orderId = 1, error, calssName }: 
         )}
         <input
           id={id}
-          className='input_custom'
+          className={`input_custom ${!!error ? 'input_error' : ''}`}
           value={value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
-          onClick={onClick}
+          onFocus={onFocus}
+          type={type === 'password' && !showPass ? 'password' : 'text'}
         />
+        {!!value && type === 'password' && (
+          <label
+            htmlFor={id}
+            className='input__postfix'
+            onClick={() => setShowPass(!showPass)}
+          >
+            {showPass ? 'Скрыть' : 'Показать' }
+          </label>
+        )}
       </div>
       {!!error && <div className='input__error'>{error}</div>}
     </div>

@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { Input, Button } from '../../components/index'
 import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { validationEmail, validationLogin, validationPassword } from '../../utils/validation'
+import { postSignIn, postRegistration } from '../../api'
+import { requestAuthAction, setAuthAction } from '../../store/reducers/auth'
+import { setUserAction } from '../../store/reducers/user'
+import { RootState } from '../../store'
 import './auth.scss'
 
 interface Props { }
@@ -17,11 +22,38 @@ const AuthView = (props: Props) => {
   const [emailError, setEmailError] = useState('')
   const nodeRef = React.useRef(null)
   const history = useHistory()
+  const dispatch = useDispatch()
+  const userLogin = useSelector((state: RootState) => state.user.login)
 
-  const validation = () => {
-    setEmailError(validationEmail(email))
-    setLoginError(validationLogin(login))
-    setPasswordError(validationPassword(password))
+  useEffect(() => {
+    if (!!userLogin) {
+      history.replace('/main')
+    }
+  }, [userLogin, history])
+
+  const validation = (): boolean => {
+    const loginError = validationLogin(login)
+    const passwordError = validationPassword(password)
+    const emailError = validationEmail(email)
+
+    setEmailError(emailError)
+    setLoginError(loginError)
+    setPasswordError(passwordError)
+
+    if (reg) return !loginError && !passwordError && !emailError
+    return !loginError && !passwordError
+  }
+
+  const sendForm = async () => {
+    const isValid = validation()
+    if (isValid) {
+      dispatch(requestAuthAction())
+      const res = reg
+        ? await postRegistration({ login, password, email })
+        : await postSignIn({ login, password })
+      dispatch(setAuthAction())
+      if (!!res.login) dispatch(setUserAction(res.login))
+    }
   }
 
   const resetFormState = () => {
@@ -33,6 +65,11 @@ const AuthView = (props: Props) => {
     setPasswordError('')
   }
 
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    sendForm()
+  }
+
   return (
     <div className='auth-view'>
       <div className='auth-view__content'>
@@ -42,7 +79,8 @@ const AuthView = (props: Props) => {
             nodeRef={nodeRef} in timeout={250}
             classNames="fade"
           >
-            <div ref={nodeRef} >
+            <form ref={nodeRef} onSubmit={(e) => onSubmit(e)}>
+              <input className='auth-view__submit' type='submit' value='' />
               <div className='auth-view__title'>{!reg ? 'Вход' : 'Регистрация'}</div>
               <Input
                 orderId={1}
@@ -59,6 +97,7 @@ const AuthView = (props: Props) => {
                 orderId={2}
                 calssName={`auth-view__input_${!passwordError ? 'default' : 'error'}`}
                 placeholder='Введите пароль'
+                type='password'
                 value={password}
                 error={passwordError}
                 onChange={(value) => {
@@ -81,11 +120,8 @@ const AuthView = (props: Props) => {
               )}
 
               <Button
-                title='Войти'
-                onClick={() =>
-                  validation()
-                  // history.push('/main')
-                }
+                title={!reg ? 'Войти' : 'Отправить'}
+                onClick={sendForm}
               />
               <Button
                 title={!reg ? 'Зарегистрироваться' : 'Уже есть аккаунт'}
@@ -95,7 +131,7 @@ const AuthView = (props: Props) => {
                   resetFormState()
                 }}
               />
-            </div>
+            </form>
           </CSSTransition>
         </SwitchTransition>
       </div>
