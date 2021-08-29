@@ -1,3 +1,5 @@
+@import '../../theme.scss';
+
 .auth-view {
   height: 100vh;
   display: flex;
@@ -29,6 +31,11 @@
 
   &__input_default { margin-bottom: 24px; }
   &__input_error { margin-bottom: 16px; }
+  &__error-message {
+    color: $red;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
   .fade-enter  {
     opacity: 0.2;

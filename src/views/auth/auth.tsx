@@ -6,7 +6,7 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group'
 import { validationEmail, validationLogin, validationPassword } from '../../utils/validation'
 import { postSignIn, postRegistration } from '../../api'
 import { requestAuthAction, setAuthAction } from '../../store/reducers/auth'
-import { setUserAction } from '../../store/reducers/user'
+import { setUserAction, setUserErrorAction, resetUserErrorAction } from '../../store/reducers/user'
 import { RootState } from '../../store'
 import './auth.scss'
 
@@ -24,6 +24,7 @@ const AuthView = (props: Props) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const userLogin = useSelector((state: RootState) => state.user.login)
+  const errorMessage = useSelector((state: RootState) => state.user.message)
 
   useEffect(() => {
     if (!!userLogin) {
@@ -53,6 +54,7 @@ const AuthView = (props: Props) => {
         : await postSignIn({ login, password })
       dispatch(setAuthAction())
       if (!!res.login) dispatch(setUserAction(res.login))
+      if (!!res.message) dispatch(setUserErrorAction(res.message))
     }
   }
 
@@ -82,6 +84,7 @@ const AuthView = (props: Props) => {
             <form ref={nodeRef} onSubmit={(e) => onSubmit(e)}>
               <input className='auth-view__submit' type='submit' value='' />
               <div className='auth-view__title'>{!reg ? 'Вход' : 'Регистрация'}</div>
+              {errorMessage && <div className='auth-view__error-message'>{errorMessage}</div>}
               <Input
                 orderId={1}
                 calssName={`auth-view__input_${!loginError ? 'default' : 'error'}`}
@@ -91,6 +94,7 @@ const AuthView = (props: Props) => {
                 onChange={(value) => {
                   setLogin(value)
                   setLoginError('')
+                  if (!!errorMessage) dispatch(resetUserErrorAction())
                 }}
               />
               <Input
@@ -103,6 +107,7 @@ const AuthView = (props: Props) => {
                 onChange={(value) => {
                   setPassword(value)
                   setPasswordError('')
+                  if (!!errorMessage) dispatch(resetUserErrorAction())
                 }}
               />
               {reg && (
@@ -115,6 +120,7 @@ const AuthView = (props: Props) => {
                   onChange={(value) => {
                     setEmail(value)
                     setEmailError('')
+                    if (!!errorMessage) dispatch(resetUserErrorAction())
                   }}
                 />
               )}
@@ -129,6 +135,7 @@ const AuthView = (props: Props) => {
                 onClick={() => {
                   setReg(!reg)
                   resetFormState()
+                  if (!!errorMessage) dispatch(resetUserErrorAction())
                 }}
               />
             </form>

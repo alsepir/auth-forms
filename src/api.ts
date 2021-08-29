@@ -1,4 +1,5 @@
-export const postSignIn = async ({ login, password }: { login: string; password: string }) => {
+export const postSignIn = async ({ login, password }: { login: string; password: string })
+  : Promise<{ login?: string; message?: string }> => {
   const user = {
     login,
     password,
@@ -13,10 +14,11 @@ export const postSignIn = async ({ login, password }: { login: string; password:
   })
 
   if (res.status === 204) return { login }
-  return {}
+  return { message: 'Введен неверный логин или пароль' }
 }
 
-export const postRegistration = async ({ login, password, email }: { login: string; password: string, email: string }) => {
+export const postRegistration = async ({ login, password, email }: { login: string; password: string, email: string })
+  : Promise<{ login?: string; message?: string }> => {
   const user = {
     login,
     password,
